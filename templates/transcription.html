@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcription Result</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-3">Transcription Result</h1>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Audio Transcription</h5>
+                <p class="card-text" style="white-space: pre-wrap;">{{ transcript }}</p>
+                <a href="/" class="btn btn-primary">Transcribe Another File</a>
+                <button class="btn btn-secondary" onclick="downloadTranscription()">Download Transcript</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadTranscription() {
+            var text = document.querySelector('.card-text').innerText;
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', 'transcription.txt');
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
+        }
+    </script>
+</body>
+</html>
