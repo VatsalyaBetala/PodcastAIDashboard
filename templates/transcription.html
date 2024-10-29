@@ -1,11 +1,11 @@
+<!-- templates/transcription.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transcription and Summary</title>
+    <title>Transcription and Analysis</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #f4f6f8;
@@ -26,6 +26,7 @@
         h1 {
             color: #0056b3;
             font-weight: 600;
+            margin-bottom: 30px;
         }
         
         .card {
@@ -41,6 +42,11 @@
             box-shadow: 0 12px 24px rgba(0,0,0,0.18);
         }
         
+        .card-title {
+            font-weight: 600;
+            color: #0056b3;
+        }
+        
         .btn-primary {
             background-color: #007bff;
             border-color: #007bff;
@@ -51,7 +57,6 @@
             background-color: #0056b3;
         }
         
-        }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -59,26 +64,83 @@
         .fade-in {
             animation: fadeIn 0.5s ease-out forwards;
         }
+
+        .hashtags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .hashtag {
+            background-color: #e0e7ff;
+            color: #0056b3;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .sentiment {
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .positive {
+            color: #28a745;
+        }
+
+        .negative {
+            color: #dc3545;
+        }
+
+        .neutral {
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
     <div class="container fade-in">
-        <h1>Transcription and Summary</h1>
+        <h1>Transcription and Analysis</h1>
         {% if error %}
             <div class="alert alert-danger">{{ error }}</div>
         {% else %}
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Audio Transcription</h5>
-                    <p class="card-text" id="transcript-text">{{ transcript }}</p>
+            {% if transcript %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Audio Transcription</h5>
+                        <p class="card-text" id="transcript-text">{{ transcript }}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Summary</h5>
-                    <p class="card-text" id="summary-text">{{ summary }}</p>
+            {% endif %}
+            {% if summary %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Summary</h5>
+                        <p class="card-text" id="summary-text">{{ summary }}</p>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
+            {% if hashtags %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Hashtags</h5>
+                        <div class="hashtags">
+                            {% for hashtag in hashtags %}
+                                <span class="hashtag">{{ hashtag }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if sentiment_label %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Sentiment Analysis</h5>
+                        <p class="card-text sentiment {% if sentiment_label == 'POSITIVE' %}positive{% elif sentiment_label == 'NEGATIVE' %}negative{% else %}neutral{% endif %}">
+                            Sentiment: {{ sentiment_label }} (Score: {{ sentiment_score | round(2) }})
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
         {% endif %}
         <a href="{{ url_for('index') }}" class="btn btn-primary mt-4">Transcribe Another File</a>
     </div>
